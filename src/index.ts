@@ -11,8 +11,14 @@ export type Scope =
 	| "successfulResponse"
 	| "unsuccessfulResponse"
 
-// eslint-disable-next-line
-type AxiosUse<V> = (onFulfilled?: ((value: V) => V | Promise<V>) | null, onRejected?: ((error: any) => any) | null, options?: any) => number
+type AxiosUse<V> = (
+		onFulfilled?:
+			((value: V) => V | Promise<V>)
+			| null,
+		onRejected?: ((error: any) => any) // eslint-disable-line
+			| null,
+		options?: any // eslint-disable-line
+	) => number
 
 type Axios = {
 	interceptors: {
@@ -32,23 +38,33 @@ export interface Meta {
 }
 
 export interface ReporterOptions {
-	report: (meta: Meta, ...data: any []) => void
-	scopes: Scope []
+	report: (meta: Meta, ...data: any[]) => void,
+	scopes: Scope [],
 	networkingFrameworks?: {
 		axios?: Axios,
 	}
 }
 
+/**
+ * A non-intercepted version of the `console` object. It's a copy of the original `console` before anything was changed.
+ *
+ * @since 1.0.0
+ * @see console
+ * @example
+ *
+ * _console.log("Love is always wise, hatred is always foolish")
+ * // => Logs "Love is always wise, hatred is always foolish"
+ */
 export const _console = console
 
 export const defineReporter = (options: ReporterOptions) => {
 
 	const _report = options.report
-	options.report = (meta, data) => {
+	options.report = (meta, ...data: any []) => {
 		if (options.scopes.includes(meta.scope)) {
 			const date = new Date()
 
-			const stacktrace =  Error().stack?.split("\n")
+			const stacktrace = Error().stack?.split("\n")
 			stacktrace?.shift() // Remove internal report interception
 			stacktrace?.shift() // Remove internal report call
 
@@ -58,7 +74,7 @@ export const defineReporter = (options: ReporterOptions) => {
 				stacktrace,
 			}
 
-			_report(meta, data)
+			_report(meta, ...data)
 		}
 	}
 

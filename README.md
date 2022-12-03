@@ -3,9 +3,9 @@
 A zero-dependency reporter for logs, errors, failed network requests and other events which are emitted in your JS application, at one spot, for you to further analyse.
 
 ## Example Usages
-### The Simplest Case
+### A simple example
 
-Call `defineReporter` and all future events will be notified to you in the `report`-callback.
+Call `defineReporter` and all future events from that moment on will be reported to you in the `report`-callback.
 ```javascript
 import { defineReporter } from "tini-tiny-reporter"
 
@@ -19,7 +19,7 @@ defineReporter({
     scopes: [
         "error",
         "exception",
-    ]
+    ],
 })
 ```
 
@@ -34,7 +34,40 @@ console.error("Something unexpected happened...")
 ```
 
 ### Networking Requests and Responses
+`tini-tiny-reporter` can notify you when requests or their responses succeeded or failed with their own scopes. `Fetch` is supported without the need of configuration, `axios` needs to be passed to the `defineReporter`:
+```javascript
+import { defineReporter } from "tini-tiny-reporter"
+import axios from "axios"
 
-## Masking Sensitive Data
+defineReporter({
+    report: (meta, data) => {
+        // ...
+    },
+    networkingFrameworks: {
+        axios,
+    },
+    scopes: [
+        "error",
+        "exception",
+        "unsuccessfulRequest",  // also: successfulRequest
+        "unsuccessfulResponse", // also: successfulResponse
+    ],
+})
+```
 
-- [ ] Finish Readme
+## All Scopes
+
+| **Scope**               |                      **Notes**                       |
+|:------------------------|:----------------------------------------------------:|
+| `log`                   |                    `console.log`                     |
+| `info`                  |                    `console.info`                    |
+| `debug`                 |                   `console.debug`                    |
+| `warn`                  |                    `console.warn`                    |
+| `error`                 |                   `console.error`                    |
+| `exception`             |                 `throw new Error()`                  |
+| `online`                |         We have re-established connectivity          |
+| `successfulRequest`     |            Request went down as expected             |
+| `unsuccessfulRequest`   |   Something bad happened while sending the request   |
+| `successfulResponse`    |          Response was received as expected           |
+| `unsuccessfulResponse`  | Something didn't happen as planned with the response |
+
