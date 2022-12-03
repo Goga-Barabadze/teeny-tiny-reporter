@@ -1,0 +1,25 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["DOM", "ES2021"],
+    "outDir": "out/",
+    "target": "ES2022",
+    "jsx": "preserve",
+    "module": "ES2022",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "noEmitOnError": true,
+    "noUncheckedIndexedAccess": true,
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": false,
+    "allowSyntheticDefaultImports": false,
+    "forceConsistentCasingInFileNames": true,
+    "importsNotUsedAsValues": "error",
+    "pretty": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "stripInternal": true
+  }
+}
