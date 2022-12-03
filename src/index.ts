@@ -5,11 +5,11 @@ export type Scope =
 	| "warn"
 	| "error"
 	| "exception"
-	| "onOnline"
-	| "onSuccessfulRequest"
-	| "onUnsuccessfulRequest"
-	| "onSuccessfulResponse"
-	| "onUnsuccessfulResponse"
+	| "online"
+	| "successfulRequest"
+	| "unsuccessfulRequest"
+	| "successfulResponse"
+	| "unsuccessfulResponse"
 
 // eslint-disable-next-line
 type AxiosUse<V> = (onFulfilled?: ((value: V) => V | Promise<V>) | null, onRejected?: ((error: any) => any) | null, options?: any) => number
@@ -25,9 +25,15 @@ type Axios = {
 	}
 }
 
+export interface Meta {
+	scope: Scope,
+	timestamp?: string,
+	stacktrace?: string [],
+}
+
 export interface ReporterOptions {
-	report: (context: Scope, ...data: any []) => void
-	scope: Scope []
+	report: (meta: Meta, ...data: any []) => void
+	scopes: Scope []
 	networkingFrameworks?: {
 		axios?: Axios,
 	}
@@ -38,15 +44,21 @@ export const _console = console
 export const defineReporter = (options: ReporterOptions) => {
 
 	const _report = options.report
-	options.report = (scope, data) => {
-		if (options.scope.includes(scope)) {
+	options.report = (meta, data) => {
+		if (options.scopes.includes(meta.scope)) {
 			const date = new Date()
-			data = {
-				data,
-				context: scope,
-				timestamp: `${new Date().toLocaleString()}:${date.getMilliseconds()}`,
+
+			const stacktrace =  Error().stack?.split("\n")
+			stacktrace?.shift() // Remove internal report interception
+			stacktrace?.shift() // Remove internal report call
+
+			meta = {
+				...meta,
+				timestamp: `${date.toLocaleString()}:${date.getMilliseconds()}`,
+				stacktrace,
 			}
-			_report(scope, data)
+
+			_report(meta, data)
 		}
 	}
 
@@ -54,23 +66,23 @@ export const defineReporter = (options: ReporterOptions) => {
 		..._console,
 		log(...data: any[]): void {
 			_console.log(...data)
-			options.report("log", ...data)
+			options.report({ scope: "log" }, ...data)
 		},
 		info(...data: any[]): void {
 			_console.info(...data)
-			options.report("info", ...data)
+			options.report({ scope: "info" }, ...data)
 		},
 		debug(...data: any[]): void {
 			_console.debug(...data)
-			options.report("debug", ...data)
+			options.report({ scope: "debug" }, ...data)
 		},
 		warn(...data: any[]): void {
 			_console.warn(...data)
-			options.report("warn", ...data)
+			options.report({ scope: "warn" }, ...data)
 		},
 		error(...data: any[]): void {
 			_console.error(...data)
-			options.report("error", ...data)
+			options.report({ scope: "error" }, ...data)
 		},
 	}
 
@@ -83,26 +95,39 @@ export const defineReporter = (options: ReporterOptions) => {
 			error,
 		}
 
-		options.report("exception", data)
+		options.report({ scope: "exception" }, data)
 	}
 
 	window.ononline = () => {
-		options.report("onOnline", { message: "Device is online again." })
+		options.report({ scope: "online" }, { message: "Device is online again." })
+	}
+
+	const _fetch = fetch
+	window.fetch = async (input, init) => {
+		return await _fetch(input, init) // TODO: "successfulRequest" and "unsuccessfulRequest"
+			.then(value => {
+				options.report({ scope: "successfulResponse" }, value)
+				return value
+			})
+			.catch(reason => {
+				options.report({ scope: "unsuccessfulResponse" }, reason)
+				return reason
+			})
 	}
 
 	options.networkingFrameworks?.axios?.interceptors.request.use(value => {
-		options.report("onSuccessfulRequest", value)
+		options.report({ scope: "successfulRequest" }, value)
 		return value
 	}, error => {
-		options.report("onUnsuccessfulRequest", error)
+		options.report({ scope: "unsuccessfulRequest" }, error)
 		return error
 	})
 
 	options.networkingFrameworks?.axios?.interceptors.response.use(value => {
-		options.report("onSuccessfulResponse", value)
+		options.report({ scope: "successfulResponse" }, value)
 		return value
 	}, error => {
-		options.report("onUnsuccessfulResponse", error)
+		options.report({ scope: "unsuccessfulResponse" }, error)
 		return error
 	})
 }

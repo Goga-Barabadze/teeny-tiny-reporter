@@ -2,13 +2,16 @@
   "name": "tini-tiny-reporter",
   "version": "1.0.0",
   "description": "Frontend debugging.",
-  "homepage": "",
-  "bugs": "",
+  "author": "Goga Barabadze",
+  "license": "MIT",
+  "homepage": "https://github.com/Goga-Barabadze/tini-tiny-reporter",
+  "repository": "https://github.com/Goga-Barabadze/tini-tiny-reporter",
+  "bugs": "https://github.com/Goga-Barabadze/tini-tiny-reporter/issues",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc",
     "reinstall": "rm -rf node_modules/ dist/ out/ && npm i",
+    "tsc": "tsc",
     "tsc:watch": "tsc --watch"
   },
   "keywords": [
@@ -18,8 +21,6 @@
     "tiny",
     "frontend"
   ],
-  "author": "Goga Barabadze",
-  "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
