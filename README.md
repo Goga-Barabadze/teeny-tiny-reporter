@@ -14,7 +14,7 @@ defineReporter({
         // meta -> "error" | "exception", timestamp and stack
         // data -> captured log or exception
 		
-        // e.g. send to server
+        // e.g. send to the central logs
     },
     scopes: [
         "error",
@@ -34,7 +34,7 @@ console.error("Something unexpected happened...")
 ```
 
 ### Networking Requests and Responses
-`tini-tiny-reporter` can notify you when requests or their responses succeeded or failed with their own scopes. `Fetch` is supported without the need of configuration, `axios` needs to be passed to the `defineReporter`:
+`tini-tiny-reporter` can notify you when requests or their responses succeeded or failed with their own scopes. `Fetch` is supported without the need of configuration, `axios` needs to be passed to `defineReporter`:
 ```javascript
 import { defineReporter } from "tini-tiny-reporter"
 import axios from "axios"

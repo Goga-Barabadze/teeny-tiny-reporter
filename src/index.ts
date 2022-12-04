@@ -38,8 +38,11 @@ export interface Meta {
 }
 
 export interface ReporterOptions {
+	// The central callback for all events
 	report: (meta: Meta, ...data: any[]) => void,
+	// The events you want to listen to
 	scopes: Scope [],
+	// References to networking frameworks, to enable their interception
 	networkingFrameworks?: {
 		axios?: Axios,
 	}
@@ -57,9 +60,36 @@ export interface ReporterOptions {
  */
 export const _console = console
 
+/**
+ * Calling `defineReporter` will set up all the necessary hooks/interceptions for you, to enable the reporting of events
+ * which you configure with the `scopes` option.
+ *
+ * @since 1.0.0
+ * @param options as defined with the `ReporterOptions` interface
+ * @see ReporterOptions
+ * @example
+ *
+ * import { defineReporter } from "tini-tiny-reporter"
+ *
+ * defineReporter({
+ *     report: (meta, data) => {
+ *     	   // e.g. send to the central logs
+ *     },
+ *     networkingFrameworks: {
+ *         axios,
+ *     },
+ *     scopes: [
+ *         "exception",
+ *         "error",
+ *         "unsuccessfulRequest",
+ *         "unsuccessfulResponse",
+ *     ],
+ * })
+ */
 export const defineReporter = (options: ReporterOptions) => {
 
 	const _report = options.report
+	// Intercept the internal report call and add metadata
 	options.report = (meta, ...data: any []) => {
 		if (options.scopes.includes(meta.scope)) {
 			const date = new Date()
