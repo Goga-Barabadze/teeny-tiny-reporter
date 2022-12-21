@@ -88,10 +88,12 @@ export const _console = console
  */
 export const defineReporter = (options: ReporterOptions) => {
 
+	let allowInterception = true
+
 	const _report = options.report
 	// Intercept the internal report call and add metadata
 	options.report = (meta, ...data: any []) => {
-		if (options.scopes.includes(meta.scope)) {
+		if (options.scopes.includes(meta.scope) && allowInterception) {
 			const date = new Date()
 
 			const stacktrace = Error().stack?.split("\n")
@@ -104,7 +106,12 @@ export const defineReporter = (options: ReporterOptions) => {
 				stacktrace,
 			}
 
+			// We need to temporarily disable interceptions to avoid inf. recursions
+			allowInterception = false
+
 			_report(meta, ...data)
+
+			allowInterception = true
 		}
 	}
 

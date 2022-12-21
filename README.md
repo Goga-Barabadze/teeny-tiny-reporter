@@ -15,6 +15,8 @@ defineReporter({
         // data -> captured log or exception
 		
         // e.g. send to the central logs
+
+        // Note: Events emitted in the callback are not reported
     },
     scopes: [
         "error",
