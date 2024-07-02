@@ -1,4 +1,4 @@
-# Tini Tiny Reporter
+# Teeny Tiny Reporter
 
 A zero-dependency reporter for logs, errors, failed network requests and other events which are emitted in your JS application, at one spot, for you to further analyse.
 
@@ -7,7 +7,7 @@ A zero-dependency reporter for logs, errors, failed network requests and other e
 
 Call `defineReporter` and all future events from that moment on will be reported to you in the `report`-callback.
 ```javascript
-import { defineReporter } from "tini-tiny-reporter"
+import { defineReporter } from "teeny-tiny-reporter"
 
 defineReporter({
     report: (meta, data) => {
@@ -36,9 +36,9 @@ console.error("Something unexpected happened...")
 ```
 
 ### Networking Requests and Responses
-`tini-tiny-reporter` can notify you when requests or their responses succeeded or failed with their own scopes. `Fetch` is supported without the need of configuration, `axios` needs to be passed to `defineReporter`:
+`teeny-tiny-reporter` can notify you when requests or their responses succeeded or failed with their own scopes. `Fetch` is supported without the need of configuration, `axios` needs to be passed to `defineReporter`:
 ```javascript
-import { defineReporter } from "tini-tiny-reporter"
+import { defineReporter } from "teeny-tiny-reporter"
 import axios from "axios"
 
 defineReporter({

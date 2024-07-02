@@ -69,7 +69,7 @@ export const _console = console
  * @see ReporterOptions
  * @example
  *
- * import { defineReporter } from "tini-tiny-reporter"
+ * import { defineReporter } from "teeny-tiny-reporter"
  *
  * defineReporter({
  *     report: (meta, data) => {

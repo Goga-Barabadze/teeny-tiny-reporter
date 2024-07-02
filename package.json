@@ -1,12 +1,12 @@
 {
-  "name": "tini-tiny-reporter",
+  "name": "teeny-tiny-reporter",
   "version": "1.0.1",
   "description": "Frontend debugging.",
   "author": "Goga Barabadze",
   "license": "MIT",
-  "homepage": "https://github.com/Goga-Barabadze/tini-tiny-reporter",
-  "repository": "https://github.com/Goga-Barabadze/tini-tiny-reporter",
-  "bugs": "https://github.com/Goga-Barabadze/tini-tiny-reporter/issues",
+  "homepage": "https://github.com/Goga-Barabadze/teeny-tiny-reporter",
+  "repository": "https://github.com/Goga-Barabadze/teeny-tiny-reporter",
+  "bugs": "https://github.com/Goga-Barabadze/teeny-tiny-reporter/issues",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
